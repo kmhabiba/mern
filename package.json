@@ -1,0 +1,22 @@
+{
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "scripts": {
+    "install:fe": "cd fe && npm install",
+    "build:fe": "cd fe && npm run build",
+    "start:fe": "cd fe && npm run start",
+    "install:server": "cd server && npm install",
+    "build:server": "cd server && npm run build",
+    "start:server": "cd server && npm run start",
+    "install:all": "run-s install:fe install:server",
+    "build:all": "run-s build:fe build:server",
+    "start:all": "run-p start:fe start:server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.16",
+    "npm-run-all": "^4.1.5"
+  }
+}
