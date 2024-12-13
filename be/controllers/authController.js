@@ -68,7 +68,8 @@ exports.resetPassword = async (req, res) => {
 };
 
 exports.registerUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
+  const userRole = role || 'user';
   try {
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -78,12 +79,13 @@ exports.registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await User.create({ username, email, password: hashedPassword });
+    const user = await User.create({ username, email, password: hashedPassword,role:userRole, });
 
     res.json({
       _id: user._id,
       username: user.username,
       email: user.email,
+      role:user.role,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -104,6 +106,7 @@ exports.loginUser = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      role: user.role,
       token: generateToken(user._id),
     });
   } catch (error) {

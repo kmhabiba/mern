@@ -1,6 +1,5 @@
-//Sidebar.js
-import React from 'react';
-import { Link , useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     Drawer,
     List,
@@ -21,7 +20,6 @@ import {
     AccountCircle as AccountCircleIcon,
     ShoppingCart as ShoppingCartIcon,
 } from '@mui/icons-material';
-import { useState } from 'react';
 
 const Sidebar = () => {
     const navigate = useNavigate();
@@ -33,7 +31,10 @@ const Sidebar = () => {
 
     const handleDashboardClick = () => {
         navigate('/dashboard');
-    }
+    };
+
+    const role = localStorage.getItem('role'); // 'admin' or 'user'
+    const username = localStorage.getItem('username');
 
     return (
         <Drawer
@@ -46,7 +47,7 @@ const Sidebar = () => {
                     boxSizing: 'border-box',
                     backgroundColor: 'white',
                     marginTop: '64px',
-                    color: 'black', 
+                    color: 'black',
                 },
             }}
         >
@@ -54,81 +55,88 @@ const Sidebar = () => {
                 <Avatar sx={{ bgcolor: '#4A90E2', marginRight: '10px' }}>
                     <AccountCircleIcon />
                 </Avatar>
-                <Typography variant="h6">Hello, User</Typography>
+                <Typography variant="h6">Hello, {username}</Typography>
             </div>
 
             <List>
-                {/* Dashboard */}
+               {role === 'admin' && (
                 <ListItem button onClick={handleDashboardClick}>
                     <ListItemIcon>
                         <DashboardIcon sx={{ color: 'black' }} />
                     </ListItemIcon>
                     <ListItemText primary="Dashboard" />
                 </ListItem>
+                )}
 
-                {/* Products */}
-                <ListItem button onClick={toggleProducts}>
-                    <ListItemIcon>
-                        <CategoryIcon sx={{ color: 'black' }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Products" />
-                    {openProducts ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={openProducts} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItem button sx={{ pl: 4 }}
-                        component={Link}
-                        to="/products/add">
-                            <ListItemText primary="Add Products" />
+                
+                {role === 'admin' && (
+                    <>
+                        <ListItem button onClick={toggleProducts}>
+                            <ListItemIcon>
+                                <CategoryIcon sx={{ color: 'black' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Products" />
+                            {openProducts ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
-                        <ListItem button sx={{ pl: 4 }}>
-                            <ListItemText primary="Product Categories" />
-                        </ListItem>
-                        <ListItem button sx={{ pl: 4 }}>
-                            <ListItemText primary="Search Products" />
-                        </ListItem>
-                        {/* <ListItem button sx={{ pl: 4 }}>
-                            <ListItemText primary="Product Variants" />
-                        </ListItem> */}
-                    </List>
-                </Collapse>
+                        <Collapse in={openProducts} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                                <ListItem button sx={{ pl: 4 }} component={Link} to="/products/add">
+                                    <ListItemText primary="Add Products" />
+                                </ListItem>
+                                <ListItem button sx={{ pl: 4 }}>
+                                    <ListItemText primary="Product Categories" />
+                                </ListItem>
+                                <ListItem button sx={{ pl: 4 }}>
+                                    <ListItemText primary="Search Products" />
+                                </ListItem>
+                            </List>
+                        </Collapse>
+                    </>
+                )}
 
-                {/* Orders
-                <ListItem button onClick={toggleOrders}>
-                    <ListItemIcon>
-                        <ShoppingCartIcon sx={{ color: 'black' }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Orders" />
-                    {openOrders ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={openOrders} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItem button sx={{ pl: 4 }}>
-                            <ListItemText primary="Order History" />
+                
+                 {role === 'user' && (
+                        <ListItem button onClick={() => navigate ('/user-home')}>
+                            <ListItemIcon>
+                                <DashboardIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary="User Dashboard" />
                         </ListItem>
-                        <ListItem button sx={{ pl: 4 }}>
-                            <ListItemText primary="Pending Orders" />
+                    )}
+
+                {/* Show Orders section for both admins and users */}
+                {role === 'admin' || role === 'user' ? (
+                    <ListItem button onClick={toggleOrders}>
+                        <ListItemIcon>
+                            <ShoppingCartIcon sx={{ color: 'black' }} />
+                        </ListItemIcon>
+                        <ListItemText primary="Orders" />
+                        {openOrders ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                ) : null}
+
+                {/* Only visible for admin */}
+                {role === 'admin' && (
+                    <>
+                        {/* Supplier Section */}
+                        <ListItem button>
+                            <ListItemIcon>
+                                <InventoryIcon sx={{ color: 'black' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Supplier" />
                         </ListItem>
-                    </List>
-                </Collapse> */}
 
-                {/* Supplier */}
-                {/* <ListItem button>
-                    <ListItemIcon>
-                        <InventoryIcon sx={{ color: 'black' }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Supplier" />
-                </ListItem> */}
+                        {/* User Activity Logs */}
+                        <ListItem button>
+                            <ListItemIcon>
+                                <AccountCircleIcon sx={{ color: 'black' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="User Activity Logs" />
+                        </ListItem>
+                    </>
+                )}
 
-                {/* User Activity Logs */}
-                <ListItem button>
-                    <ListItemIcon>
-                        <AccountCircleIcon sx={{ color: 'black' }} />
-                    </ListItemIcon>
-                    <ListItemText primary="User Activity Logs" />
-                </ListItem>
-
-                {/* My Account */}
+                {/* My Account (Always visible) */}
                 <ListItem button>
                     <ListItemIcon>
                         <AccountCircleIcon sx={{ color: 'black' }} />
@@ -136,7 +144,7 @@ const Sidebar = () => {
                     <ListItemText primary="My Account" />
                 </ListItem>
 
-                {/* Logout */}
+                {/* Logout (Always visible) */}
                 <ListItem button>
                     <ListItemIcon>
                         <LogoutIcon sx={{ color: 'black' }} />

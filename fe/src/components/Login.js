@@ -13,22 +13,29 @@ function Login({ setToken, setUser }) {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    // handleSumit with role
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:5001/api/auth/login', { email, password });
-            const { token, username } = response.data;
-
+            const { token, role, username } = response.data;
+     
             localStorage.setItem('token', token);
-
+            localStorage.setItem('role', role);
+            localStorage.setItem('username', username);
+     
             setToken(token);
             setUser(username);
-            navigate('/dashboard');
+     
+            if (role === 'admin') {
+                navigate('/dashboard'); 
+            } else if (role === 'user') {
+                navigate('/user-home') 
+            }
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
         }
     };
-
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
@@ -91,64 +98,3 @@ function Login({ setToken, setUser }) {
 }
 
 export default Login;
-
-
-// //working login without MUL
-// import React, { useState } from 'react';
-// import { useNavigate, Link } from 'react-router-dom';
-// import axios from 'axios';
-// import './Dashboard';
-
-// function Login({ setToken, setUser }) {
-//     const [email, setEmail] = useState('');
-//     const [password, setPassword] = useState('');
-//     const [error, setError] = useState('');
-//     const navigate = useNavigate();
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         try {
-//             const response = await axios.post('http://localhost:5001/api/auth/login', { email, password });
-//             const { token, username } = response.data;
-
-//             localStorage.setItem('token', token);
-
-//             setToken(token);
-//             setUser(username);
-//             navigate('/dashboard');
-//         } catch (err) {
-//             setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
-//         }
-//     };
-
-//     return (
-//         <div className="auth-container">
-//             <h2>Login</h2>
-//             {error && <p className="auth-error">{error}</p>}
-//             <form onSubmit={handleSubmit} className="auth-form">
-//                 <input
-//                     type="email"
-//                     placeholder="Email"
-//                     value={email}
-//                     onChange={(e) => setEmail(e.target.value)}
-//                     className="auth-input"
-//                     required
-//                 />
-//                 <input
-//                     type="password"
-//                     placeholder="Password"
-//                     value={password}
-//                     onChange={(e) => setPassword(e.target.value)}
-//                     className="auth-input"
-//                     required
-//                 />
-//                 <button type="submit" className="auth-button">Login</button>
-//             </form>
-//             <div className="auth-links">
-//                 <Link to="/forgot-password" className="auth-link">Forgot Password?</Link>
-//             </div>
-//         </div>
-//     );
-// }
-
-// export default Login;

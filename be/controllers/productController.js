@@ -1,15 +1,15 @@
 const Product = require('../Models/Product');
  
 const addProduct = async (req, res) => {
-  const { name, price } = req.body;
+  const { name, price,image,quantity } = req.body;
   console.log('Request payload:', req.body);
  
-  if (!name || !price) {
-    return res.status(400).json({ message: 'Name and price are required' });
+  if (!name || !price || !image || !quantity) {
+    return res.status(400).json({ message: 'Name , price , image and quantity are required' });
   }
  
   try {
-    const newProduct = new Product({ name, price });
+    const newProduct = new Product({ name, price , image, quantity});
     await newProduct.save();
     res.status(201).json({ message: 'Product added successfully', product: newProduct });
   } catch (error) {

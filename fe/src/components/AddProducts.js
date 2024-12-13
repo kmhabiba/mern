@@ -1,4 +1,4 @@
-//code for the tabular form
+//Dialog
 import React, { useEffect, useState } from 'react';
 import {
   Container,
@@ -14,7 +14,11 @@ import {
   Button,
   IconButton,
   TextField,
-  Grid,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Tooltip,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -30,6 +34,7 @@ const Products = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [editProductId, setEditProductId] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -52,6 +57,16 @@ const Products = () => {
     setNewProduct((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleDialogOpen = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setNewProduct({ name: '', price: '', image: '', quantity: '' });
+    setIsEditing(false);
+  };
+
   const handleAddProduct = () => {
     const token = localStorage.getItem('token');
     fetch('http://localhost:5001/api/products', {
@@ -65,7 +80,7 @@ const Products = () => {
       .then((res) => res.json())
       .then(() => {
         fetchProducts();
-        setNewProduct({ name: '', price: '', image: '', quantity: '' });
+        handleDialogClose();
       })
       .catch((err) => console.error(err));
   };
@@ -80,6 +95,7 @@ const Products = () => {
       image: product.image,
       quantity: product.quantity,
     });
+    handleDialogOpen();
   };
 
   const handleUpdateProduct = () => {
@@ -96,19 +112,10 @@ const Products = () => {
       },
       body: JSON.stringify(newProduct),
     })
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then((err) => {
-            throw new Error(err.message || 'Failed to update product');
-          });
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .then(() => {
-        fetchProducts(); // Refresh the product list
-        setIsEditing(false);
-        setEditProductId(null);
-        setNewProduct({ name: '', price: '', image: '', quantity: '' }); // Reset the form
+        fetchProducts();
+        handleDialogClose();
       })
       .catch((err) => console.error('Update failed:', err));
   };
@@ -121,87 +128,56 @@ const Products = () => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then((err) => {
-            throw new Error(err.message || 'Failed to delete product');
-          });
-        }
-        return res.json();
-      })
       .then(() => {
-        fetchProducts(); // Refresh the product list after deletion
+        fetchProducts();
       })
       .catch((err) => console.error('Delete failed:', err));
   };
 
   return (
     <Container sx={{ marginTop: '30px' }}>
-      {/* Add Product Form */}
-      <Box sx={{ marginBottom: '20px' }}>
-        <Typography variant="h5" color="primary" gutterBottom>
-          {isEditing ? 'Edit Product' : 'Add Product'}
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="Name"
-              name="name"
-              value={newProduct.name}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <TextField
-              label="Price"
-              name="price"
-              value={newProduct.price}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <TextField
-              label="Quantity"
-              name="quantity"
-              value={newProduct.quantity}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <TextField
-              label="Image URL"
-              name="image"
-              value={newProduct.image}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <Button
-              variant="contained"
-              color={isEditing ? 'secondary' : 'primary'}
-              onClick={isEditing ? handleUpdateProduct : handleAddProduct}
-              fullWidth
-            >
-              {isEditing ? 'Update' : 'Add'}
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
+      <Typography variant="h5" color="primary" gutterBottom>
+        Products
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleDialogOpen}
+        sx={{ marginBottom: '20px' }}
+      >
+        Add Product
+      </Button>
 
       {/* Product Table */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell align="center">Image</TableCell>
-              <TableCell align="center">Product Name</TableCell>
-              <TableCell align="center">Price</TableCell>
-              <TableCell align="center">Quantity</TableCell>
-              <TableCell align="center">Actions</TableCell>
+            <TableRow style={{backgroundColor:"#f0f0f0"}}>
+              <TableCell align="center">
+                <Tooltip title="This is the product image" placement="top">
+                  <span> Image </span>
+                </Tooltip>
+              </TableCell>
+              <TableCell align="center">
+                <Tooltip title="This is the product name" placement="top">
+                  <span> Product Name </span>
+                </Tooltip>
+              </TableCell>
+              <TableCell align="center">
+                <Tooltip title="This is the product price" placement="top">
+                  <span> Price </span>
+                </Tooltip>
+              </TableCell>
+              <TableCell align="center">
+                <Tooltip title="This is the product quantity" placement="top">
+                  <span> Quantity </span>
+                </Tooltip>
+              </TableCell>
+              <TableCell align="center">
+                <Tooltip title="This is the Action" placement="top">
+                  <span> Action </span>
+                </Tooltip>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -236,6 +212,55 @@ const Products = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Dialog for Add/Edit Product */}
+      <Dialog open={isDialogOpen} onClose={handleDialogClose}>
+        <DialogTitle>{isEditing ? 'Edit Product' : 'Add Product'}</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Name"
+            name="name"
+            value={newProduct.name}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Price"
+            name="price"
+            value={newProduct.price}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Quantity"
+            name="quantity"
+            value={newProduct.quantity}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Image URL"
+            name="image"
+            value={newProduct.image}
+            onChange={handleInputChange}
+            fullWidth
+            margin="normal"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose}>Cancel</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={isEditing ? handleUpdateProduct : handleAddProduct}
+          >
+            {isEditing ? 'Update' : 'Add'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
