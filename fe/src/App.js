@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, BrowserRouter } from 'react-router-dom';
 import { Container, Box, Typography, Grid } from '@mui/material';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -12,6 +12,18 @@ import ResetPassword from "./components/ResetPassword";
 import ProductList from './components/ProductList';
 import Cart from './components/Cart';
 import { CartProvider } from './components/context/CartContext';
+import Navbar from './components/Navbar/Navbar';
+import { BrowserRouter,Routes,Route } from 'react-router-dom'
+import Shop from './pages/Website/Shop';
+import ShopCategory from './pages/Website/ShopCategory';
+import Product from './pages/Website/Product';
+import Cart from './pages/Website/Cart';
+import LoginSignup from './pages/Website/LoginSignup';
+import Footer from './Components/Footer/Footer';
+import men_banner from './Components/Assets/banner_mens.png';
+import women_banner from './Components/Assets/banner_women.png';
+import kid_banner from './Components/Assets/banner_kids.png'
+
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -24,28 +36,42 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <CartProvider>
-        <div style={{ display: 'flex' }}>
-          {user && <Sidebar />}
-          <div style={{ flexGrow: 1 , paddingLeft:'10px', marginTop:'64px'}}>
-            <Navbar user={user} logout={logout} />
-            <Container>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login setUser={setUser} setToken={setToken} />} />
-                <Route path="/signup" element={<Registration />} />
-                <Route path="/dashboard" element={token ? <Dashboard logout={logout} /> : <Login setUser={setUser} setToken={setToken} />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password/:token" element={<ResetPassword />} />
-                {/* <Route path="/products" element={user ? <Products /> : <Login setUser={setUser} setToken={setToken} />} /> */}
-                <Route path="/products/add" element={user ? <AddProducts /> : <Login setUser={setUser} setToken={setToken} />} />
-              </Routes>
-            </Container>
+    <BrowserRouter>
+      <Navbar />
+      <Router>
+        <CartProvider>
+          <div style={{ display: 'flex' }}>
+            {user && <Sidebar />}
+            <div style={{ flexGrow: 1, paddingLeft: '10px', marginTop: '64px' }}>
+              <Navbar user={user} logout={logout} />
+              <Container>
+                <Routes>
+                  <Route path="/home" element={<Home />} />
+                  <Route path='/' element={<Shop />} />
+                  <Route path='/mens' element={<ShopCategory banner={men_banner} category="men" />} />
+                  <Route path='/womens' element={<ShopCategory banner={women_banner} category="women" />} />
+                  <Route path='/kids' element={<ShopCategory banner={kid_banner} category="kid" />} />
+                  <Route path='product' element={<Product />}>
+                    <Route path=':productId' element={<Product />} />
+                  </Route>
+                  <Route path='/cart' element={<Cart />} />
+                  <Route path='/login' element={<LoginSignup />} />
+                  <Route path="/login" element={<Login setUser={setUser} setToken={setToken} />} />
+                  <Route path="/signup" element={<Registration />} />
+                // routes for normal user
+                  <Route path="/dashboard" element={token && userRole == 'customer' ? <Dashboard logout={logout} /> : <Login setUser={setUser} setToken={setToken} />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password/:token" element={<ResetPassword />} />
+                  {/* <Route path="/products" element={user ? <Products /> : <Login setUser={setUser} setToken={setToken} />} /> */}
+                  <Route path="/products/add" element={user ? <AddProducts /> : <Login setUser={setUser} setToken={setToken} />} />
+                </Routes>
+              </Container>
+            </div>
           </div>
-        </div>
-      </CartProvider>
-    </Router>
+        </CartProvider>
+      </Router>
+      <Footer />
+    </BrowserRouter>
   );
 };
 
@@ -135,7 +161,7 @@ export default App;
 //     <Box
 //       sx={{
 //         backgroundImage: 'url(https://th.bing.com/th?id=OIP.TLnAjZeghpqjliFtQ9zaxgHaFb&w=291&h=214&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2)',
-//         backgroundSize: 'cover', 
+//         backgroundSize: 'cover',
 //         backgroundPosition: 'center',
 //         height: '100vh',
 //         color: 'brown',

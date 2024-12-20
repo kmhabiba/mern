@@ -1,0 +1,135 @@
+// // client/src/App.js
+// import React, {Fragment, useState, useEffect } from 'react';
+// import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+
+// import { ThemeProvider } from '@mui/material/styles';
+// import {AppProvider} from './providers/AppProvider';
+// // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { TimeZoneProvider } from './context/TimeZoneContext';
+// // import AdapterDateFns from '@mui/x-date-pickers/AdapterDateFns';
+// import { AuthProvider, useAuthContext } from './context/authContext';
+// import theme  from './config/theme';
+// import DashboardLayout from './pages/Layout/Layout';
+// import Dashboard from './pages/Dashboard';
+// import SignIn from './pages/SignIn';  // Sample additional page
+// import Page2 from './pages/Page2';  // Another sample page
+// import Signup from './pages/SignIn/Signup';
+// import { ProductList } from './pages/Products/ProductList';
+// import { ProductVariants } from './pages/Products/ProductVariants';
+// import { SearchSku } from './pages/Products/SearchSku';
+// import { OrderList } from './pages/Orders/OrderList';
+// import { ReceiveOrders } from './pages/Orders/ReceiveOrders';
+// import { SalesOrders } from './pages/Orders/SalesOrders';
+// import { SearchSupplier } from './pages/Supplier/SearchSupplier';
+// import { PurchaseHistory } from './pages/Supplier/PurchaseHistory';
+// import { ProductCategories } from './pages/Products/ProductCategories';
+// import { ActivityLogs } from './pages/ActivityLogs';
+// import { MyAccount } from './pages/MyAccount';
+
+
+
+
+// // import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+// function App() {
+//   const [tasks, setTasks] = useState([]);
+//   const [newTask, setNewTask] = useState({ title: '', description: '' });
+//   const [editTask, setEditTask] = useState({ id: null, title: '', description: '' });
+//  const ProtectedRoute = ({ component: Component, ...rest }) => {
+//   const { isAuthenticated } = useAuthContext();
+
+//   return (
+//     <Route
+//       {...rest}
+//       render={props =>
+//         isAuthenticated ? <Component {...props} /> : <Navigate to="/signin" />
+//       }
+//     />
+//   );
+// };
+  
+
+//   return (
+//     <Router>
+//     <AppProvider>
+
+//     <AuthProvider>
+//       <TimeZoneProvider>
+//         {/* <LocalizationProvider dateAdapter={AdapterDateFns}> */}
+//         <div className="App">
+      
+    
+        
+//       <Routes>
+//         {/* Login route without Dashboard layout */}
+//         <Route path="/signin" element={<SignIn />} />
+//         <Route path="/signup" element={<Signup />} />
+
+        
+
+//         {/* Dashboard layout with nested routes */}
+//         <Route path="/" element={<DashboardLayout />}>
+//           <Route path="/" element={<Dashboard />} />
+//           <Route path="dashboard" element={<Dashboard />} />
+//           <Route path="product-list" element={<ProductList />} />
+//           <Route path="product-variants" element={<ProductVariants />} />
+//           <Route path="search-skus" element={<SearchSku />} />
+//           <Route path="orders" element={<OrderList />} />
+//           <Route path="receive-orders" element={<ReceiveOrders />} />
+//           <Route path="sales-orders" element={<SalesOrders />} />
+//           <Route path="suppliers" element={<SearchSupplier />} />
+//           <Route path="purchase-history" element={<PurchaseHistory />} />
+//           <Route path="product-categories" element={<ProductCategories />} />
+//           <Route path="logs" element={<ActivityLogs />} />
+//           <Route path="my-account" element={<MyAccount />} />
+//           {/* <Route path="page2" element={<Page2 />} /> */}
+//           <Route path="*" element={<h2>404 Not Found</h2>} /> {/* Simple Not Found */}
+//         </Route>
+//       </Routes>
+//       {/* <Routes>
+//       <React.Fragment>
+//           <Route path="/signin" element={<SignIn />} />
+          
+//           <Route
+//             path="/"
+//             exact
+//             element={
+//               <ProtectedRoute component={DashboardLayout}></ProtectedRoute>
+//             }
+//           >
+//             <Route exact path="/page2" element={<div>Profile Page</div>} />
+//             {/* <Route path="settings" element={<div>Settings Page</div>} /> 
+          
+         
+//           <Route exact path="/dashboard" element={<div>Home Page</div>} />
+//           </React.Fragment>
+//         </Routes> */}
+//         {/* <Routes>
+//         <Route path="/signin" element={<Page1 />} />
+//           <Route path="/" element={<DashboardLayout />} />
+//           <Route path="/page1" element={<Page1 />} />
+//           <Route path="/page2" element={<Page2 />} />
+//         </Routes> */}
+
+//         {/* <Routes>
+//           <Route path="/" element={<SignIn />} />
+//           <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+//             <Route index element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+//             <Route path="page1" element={<ProtectedRoute><Page1 /></ProtectedRoute>} />
+//             <Route path="page2" element={<ProtectedRoute><Page2 /></ProtectedRoute>} />
+//           </Route>
+//           <Route path="*" element={<Navigate to="/" />} /> 
+//         </Routes> */}
+
+      
+   
+//     </div>
+//       </TimeZoneProvider>
+//     </AuthProvider>
+    
+//   </AppProvider>
+//   </Router>
+   
+//   );
+// }
+
+// export default App;
