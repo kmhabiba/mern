@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, CardContent, CardMedia, Typography, Grid, Button, CircularProgress } from '@mui/material';
 import { styled } from '@mui/system';
-import { Favorite, ShoppingCart } from '@mui/icons-material'; // MUI icons for wishlist and cart
+import { Favorite, ShoppingCart } from '@mui/icons-material'; 
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [wishlist, setWishlist] = useState([]); // Local wishlist state
+    const [wishlist, setWishlist] = useState([]);
 
-    // Fetch products from the backend
     const fetchProducts = async () => {
         try {
             const response = await fetch('http://localhost:5001/api/products');
@@ -25,13 +24,10 @@ const ProductList = () => {
         fetchProducts();
     }, []);
 
-    // Add product to cart (only UI logic)
     const handleAddToCart = (product) => {
-        // Backend integration for adding to cart would happen here
         alert(`${product.name} has been added to your cart.`);
     };
 
-    // Add product to wishlist (only UI logic)
     const handleAddToWishlist = (product) => {
         if (!wishlist.some((item) => item._id === product._id)) {
             setWishlist([...wishlist, product]);
@@ -73,13 +69,12 @@ const ProductList = () => {
                                         </Typography>
                                     </CardContent>
 
-                                    {/* Action buttons */}
                                     <Box sx={{ padding: '16px', display: 'flex', justifyContent: 'space-between' }}>
                                         <Button
                                             variant="contained"
                                             color="primary"
                                             onClick={() => handleAddToCart(product)}
-                                            startIcon={<ShoppingCart />} // MUI cart icon
+                                            startIcon={<ShoppingCart />} 
                                         >
                                             Add to Cart
                                         </Button>
@@ -87,7 +82,7 @@ const ProductList = () => {
                                             variant="outlined"
                                             color="secondary"
                                             onClick={() => handleAddToWishlist(product)}
-                                            startIcon={<Favorite />} // MUI heart icon for wishlist
+                                            startIcon={<Favorite />} 
                                         >
                                             Add to Wishlist
                                         </Button>
@@ -105,16 +100,13 @@ const ProductList = () => {
         </Box>
     );
 };
-
-// Custom styled Grid container with a scrollbar
 const ProductGrid = styled(Grid)(({ theme }) => ({
     display: 'flex',
     flexWrap: 'wrap',
     gap: '20px',
     justifyContent: 'center',
-    overflowY: 'auto', // Enables vertical scroll if content exceeds height
-    maxHeight: 'calc(100vh - 200px)', // Adjust max height as per the layout
-    padding: '10px',
+    overflowY: 'auto',
+    maxHeight: 'calc(100vh - 200px)',
     '&::-webkit-scrollbar': {
         width: '8px',
     },
@@ -125,44 +117,3 @@ const ProductGrid = styled(Grid)(({ theme }) => ({
 }));
 
 export default ProductList;
-
-// //correct code without image
-// import React, { useEffect, useState } from 'react';
-
-// const ProductList = () => {
-//     const [products, setProducts] = useState([]);
-
-//     // Fetch products from the backend
-//     const fetchProducts = async () => {
-//         try {
-//             const response = await fetch('http://localhost:5001/api/products');
-//             const data = await response.json();
-//             setProducts(data);
-//         } catch (error) {
-//             console.error('Error fetching products:', error);
-//         }
-//     };
-
-//     useEffect(() => {
-//         fetchProducts();
-//     }, []);
-
-//     return (
-//         <div>
-//             <h2>Product List </h2>
-//             <ul>
-//                 {products.length > 0 ? (
-//                     products.map((product) => (
-//                         <li key={product._id}>
-//                             {product.name} - ${product.price}
-//                         </li>
-//                     ))
-//                 ) : (
-//                     <p>No products available</p>
-//                 )}
-//             </ul>
-//         </div>
-//     );
-// };
-
-// export default ProductList;

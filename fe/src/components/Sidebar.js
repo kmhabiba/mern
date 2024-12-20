@@ -81,14 +81,14 @@ const Sidebar = () => {
                         <Collapse in={openProducts} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
                                 <ListItem button sx={{ pl: 4 }} component={Link} to="/products/add">
-                                    <ListItemText primary="Add Products" />
-                                </ListItem>
-                                <ListItem button sx={{ pl: 4 }}>
-                                    <ListItemText primary="Product Categories" />
-                                </ListItem>
-                                <ListItem button sx={{ pl: 4 }}>
                                     <ListItemText primary="Search Products" />
                                 </ListItem>
+                                <ListItem button sx={{ pl: 4 }} component={Link} to="/categories">
+                                    <ListItemText primary="Product Categories" />
+                                </ListItem>
+                                {/* <ListItem button sx={{ pl: 4 }}>
+                                    <ListItemText primary="Search Products" />
+                                </ListItem> */}
                             </List>
                         </Collapse>
                     </>
@@ -104,7 +104,6 @@ const Sidebar = () => {
                         </ListItem>
                     )}
 
-                {/* Show Orders section for both admins and users */}
                 {role === 'admin' || role === 'user' ? (
                     <ListItem button onClick={toggleOrders}>
                         <ListItemIcon>
@@ -115,10 +114,8 @@ const Sidebar = () => {
                     </ListItem>
                 ) : null}
 
-                {/* Only visible for admin */}
                 {role === 'admin' && (
                     <>
-                        {/* Supplier Section */}
                         <ListItem button>
                             <ListItemIcon>
                                 <InventoryIcon sx={{ color: 'black' }} />
@@ -126,7 +123,6 @@ const Sidebar = () => {
                             <ListItemText primary="Supplier" />
                         </ListItem>
 
-                        {/* User Activity Logs */}
                         <ListItem button>
                             <ListItemIcon>
                                 <AccountCircleIcon sx={{ color: 'black' }} />
@@ -136,7 +132,6 @@ const Sidebar = () => {
                     </>
                 )}
 
-                {/* My Account (Always visible) */}
                 <ListItem button>
                     <ListItemIcon>
                         <AccountCircleIcon sx={{ color: 'black' }} />
@@ -144,7 +139,6 @@ const Sidebar = () => {
                     <ListItemText primary="My Account" />
                 </ListItem>
 
-                {/* Logout (Always visible) */}
                 <ListItem button>
                     <ListItemIcon>
                         <LogoutIcon sx={{ color: 'black' }} />

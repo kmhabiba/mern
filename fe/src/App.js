@@ -15,6 +15,7 @@ import { CartProvider } from './components/context/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserHome from './components/UserHome';
 import { Navigate } from 'react-router-dom';
+import CategoryPage from './components/CategoryPage';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -44,6 +45,7 @@ const App = () => {
               <Route path="/reset-password/:token" element={<ResetPassword />} />
               {/* <Route path="/products" element={user ? <Products /> : <Login setUser={setUser} setToken={setToken} />} /> */}
               <Route path="/products/add" element={user ? <AddProducts /> : <Login setUser={setUser} setToken={setToken} />} />
+              <Route path="/categories" element={<CategoryPage />} />
             </Routes>
           </Container>
         </div>
@@ -74,7 +76,6 @@ const Home = () => {   // Home Component with Background Image
       </Typography>
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12} sm={6} md={4}>
-          {/* You can add additional images or other content here */}
         </Grid>
       </Grid>
       <Box sx={{ marginTop: '40px' }}>
