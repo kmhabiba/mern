@@ -1,9 +1,10 @@
+
 import React from 'react';
 
 const Dashboard = () => {
     return (
         <div>
-            <h1 className = "navbar-align"> Dashboard</h1>
+            <h1 className = "navbar-align">Welcome to the Amin Dashboard</h1>
         </div>
     );
 };

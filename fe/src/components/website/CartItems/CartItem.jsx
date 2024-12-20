@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Box, Typography, Button, Grid, Divider, TextField } from '@mui/material';
-import { ShopContext } from '../../Context/ShopContext';
+import { ShopContext } from '../../dashboard/context/ShopContext';
 import remove_icon from '../Assets/cart_cross_icon.png';
 import './cartItem.css';
 

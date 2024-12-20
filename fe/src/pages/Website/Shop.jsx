@@ -1,9 +1,9 @@
 import React from 'react'
-import Hero from '../Components/Hero/Hero'
-import Popular from '../Components/Popular/Popular'
-import Offers from '../Components/Offers/Offers'
-import NewCollections from '../Components/NewCollections/NewCollections'
-import NewsLetter from '../Components/NewsLetter/NewsLetter'
+import Hero from '../../components/website/Hero/Hero'
+import Popular from '../../components/website/Popular/Popular'
+import Offers from '../../components/website/Offers/Offers'
+import NewCollections from '../../components/website/NewCollections/NewCollections'
+import NewsLetter from '../../components/website/NewsLetter/NewsLetter'
 
 const Shop = () => {
   return (

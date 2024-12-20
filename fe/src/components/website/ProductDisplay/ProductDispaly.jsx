@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import './productDispaly.css';
 import start_icon from '../Assets/star_icon.png';
 import start_dull_icon from '../Assets/star_dull_icon.png';
-import {ShopContext} from '../../Context/ShopContext';
+import {ShopContext} from '../../dashboard/context/ShopContext';
 
 const ProductDispaly = (props) => {
 

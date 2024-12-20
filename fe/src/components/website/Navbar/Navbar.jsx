@@ -55,7 +55,7 @@ import { Link } from "react-router-dom";
 import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem, Badge } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { ShopContext } from '../../Context/ShopContext';
+import { ShopContext } from '../../dashboard/context/ShopContext';
 import logo from "../Assets/logo.png";
 import nav_dropdown from "../Assets/nav_dropdown.png";
 

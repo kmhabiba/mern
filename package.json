@@ -6,12 +6,12 @@
     "install:fe": "cd fe && npm install",
     "build:fe": "cd fe && npm run build",
     "start:fe": "cd fe && npm run start",
-    "install:server": "cd server && npm install",
-    "build:server": "cd server && npm run build",
-    "start:server": "cd server && npm run start",
-    "install:all": "run-s install:fe install:server",
-    "build:all": "run-s build:fe build:server",
-    "start:all": "run-p start:fe start:server",
+    "install:be": "cd be && npm install",
+    "build:be": "cd be && npm run build",
+    "start:be": "cd be && npm run start",
+    "install:all": "run-s install:fe install:be",
+    "build:all": "run-s build:fe build:be",
+    "start:all": "run-p start:fe start:be",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {

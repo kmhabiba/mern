@@ -10,9 +10,18 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   image: {    
-    type: String, // Base64 string
+    type: String,
     required: true,
   },
+  quantity:{
+    type:Number,
+    required:true,
+  },
+  category:{
+    type:String,
+    required:true,
+    enum:["fruits" , "veggies" ,"flour" , "snacks"]
+  }
 });
  
 const Product = mongoose.model('Product', productSchema);
