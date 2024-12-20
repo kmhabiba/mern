@@ -99,7 +99,7 @@ const Products = () => {
     const token = localStorage.getItem("token");
     fetch("http://localhost:5001/api/products", {
       headers: {
-        Authorization: `Beare r ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
