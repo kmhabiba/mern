@@ -22,6 +22,7 @@ import {
   TableSortLabel,
   Menu,
 } from "@mui/material";
+import axios from 'axios';
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FormControl from "@mui/material/FormControl";
@@ -88,26 +89,29 @@ const Products = () => {
   }, [newProduct.image]);
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    fetchProducts(selectedCategory);
+  }, [selectedCategory]);
 
   useEffect(() => {
     handleSearch();
   }, [searchQuery, products]);
 
-  const fetchProducts = () => {
+  const fetchProducts = async (category) => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:5001/api/products", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setFilteredProducts(data);
-      })
-      .catch((err) => console.error(err));
+    try {
+      const response = await axios.get(
+        `http://localhost:5001/api/products${category ? `?category=${category}` : ""}`, // Include category in the query
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setProducts(response.data); 
+      setFilteredProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -287,12 +291,14 @@ const Products = () => {
       <Typography variant="h5" color="primary" gutterBottom>
         Products
       </Typography>
+
       <Box
         display="flex"
         justifyContent="space-between"
         mb={2}
         alighItems="center"
       >
+        <Tooltip title="Search products by name" arrow>
         <TextField
           label="Search"
           variant="outlined"
@@ -300,6 +306,8 @@ const Products = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           size="small"
         />
+        </Tooltip>
+        <Tooltip title="Add Product" arrow>
         <Button
           variant="contained"
           color="primary"
@@ -308,6 +316,7 @@ const Products = () => {
         >
           Add Product
         </Button>
+        </Tooltip>
       </Box>
       <Box display="flex" justifyContent="flex-start" mb={2}>
       </Box>
@@ -317,6 +326,7 @@ const Products = () => {
             <TableRow style={{ backgroundColor: "#f0f0f0" }}>
               {["image", "name", "price", "quantity", "category"].map((key) => (
                 <TableCell key={key} align="center">
+                  <Tooltip title={key.charAt(0).toUpperCase()+key.slice(1)}>
                   {key === "price" ? (
                     <TableSortLabel
                       active={sortConfig.key === key}
@@ -328,6 +338,7 @@ const Products = () => {
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                     </TableSortLabel>
                     ) : key ==="category"? (
+                      
                       <>
                       {key.charAt(0).toUpperCase() + key.slice(1)}
                       <IconButton
@@ -358,9 +369,14 @@ const Products = () => {
                     ) : (
                       key.charAt(0).toUpperCase() + key.slice(1)
                     )}
+                    </Tooltip>
                 </TableCell> 
               ))}
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align="center">
+                <Tooltip title= "Actions">
+                  <span>Action</span>
+                  </Tooltip>
+                </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -378,19 +394,24 @@ const Products = () => {
                   <TableCell align="center">{product.price}</TableCell>
                   <TableCell align="center">{product.quantity}</TableCell>
                   <TableCell align="center">{product.category}</TableCell>
+                  
                   <TableCell align="center">
+                  <Tooltip title="Edit Product" arrow>
                     <IconButton
                       color="primary"
                       onClick={() => handleEditProduct(product._id)}
                     >
                       <EditIcon />
                     </IconButton>
+                   </Tooltip>
+                   <Tooltip title="Delete product" arrow>
                     <IconButton
                       color="secondary"
                       onClick={() => handleDeleteProduct(product._id)}
                     >
                       <DeleteIcon />
                     </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))
