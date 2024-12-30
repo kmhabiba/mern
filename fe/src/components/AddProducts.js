@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { mountuseEffect,useContext, useEffect, useState } from "react";
+import { CategoryContext } from "../components/context/CategoryContext";
 import {
   Container,
   Box,
@@ -22,7 +23,7 @@ import {
   TableSortLabel,
   Menu,
 } from "@mui/material";
-import axios from 'axios';
+import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FormControl from "@mui/material/FormControl";
@@ -32,6 +33,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FilterListIcon from "@mui/icons-material/FilterAlt";
 
 const Products = () => {
+  const { categories, fetchCategories } = useContext(CategoryContext);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
@@ -54,30 +56,23 @@ const Products = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  const categories = ["fruits", "veggies", "snacks", "flour"];
-
   useEffect(() => {
-    if (selectedCategory) {
-      setFilteredProducts(
-        products.filter((product) => product.category === selectedCategory)
-      );
-    } else {
-      setFilteredProducts(products);
-    }
-  }, [selectedCategory, products]);
+    fetchCategories();
+  }, []);
 
   const handleFilterClick = (event) => {
     setAnchorEl(event.currentTarget);
-  }
+  };
 
   const handleFilterClose = () => {
     setAnchorEl(null);
-  }
+  };
 
   const handleCategeorySelect = (category) => {
     setSelectedCategory(category);
+    setNewProduct({ ...newProduct, category: category });
     handleFilterClose();
-  }
+  };
 
   useEffect(() => {
     if (newProduct.image instanceof File) {
@@ -89,6 +84,7 @@ const Products = () => {
   }, [newProduct.image]);
 
   useEffect(() => {
+    // for whole table data
     fetchProducts(selectedCategory);
   }, [selectedCategory]);
 
@@ -96,21 +92,41 @@ const Products = () => {
     handleSearch();
   }, [searchQuery, products]);
 
-  const fetchProducts = async (category) => {
+  useEffect(() => {
+    fetchProducts();
+  }, []); // Fetch products on mount
+   
+  useEffect(() => {
+    if (products.length > 0) {
+      if (selectedCategory) {
+        const filtered = products.filter(
+          (product) => product.category?._id === selectedCategory 
+        );
+        setFilteredProducts(filtered);
+      } else {
+        setFilteredProducts(products);
+      }
+    }
+  }, [selectedCategory, products]);
+
+  const fetchProducts = async (categoryId) => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.get(
-        `http://localhost:5001/api/products${category ? `?category=${category}` : ""}`, // Include category in the query
+        `http://localhost:5001/api/products${
+          categoryId ? `?category=${categoryId}` : ""
+        }`, // Include category in the query
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setProducts(response.data); 
+      setProducts(response.data);
       setFilteredProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
+      alert("failed to fetch products.Please try again");
     }
   };
 
@@ -125,7 +141,7 @@ const Products = () => {
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
-    setNewProduct({ name: "", price: "", image: "", quantity: "", });
+    setNewProduct({ name: "", price: "", image: "", quantity: "" });
     setIsEditing(false);
   };
 
@@ -299,84 +315,84 @@ const Products = () => {
         alighItems="center"
       >
         <Tooltip title="Search products by name" arrow>
-        <TextField
-          label="Search"
-          variant="outlined"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          size="small"
-        />
+          <TextField
+            label="Search"
+            variant="outlined"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            size="small"
+          />
         </Tooltip>
         <Tooltip title="Add Product" arrow>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ marginLeft: "50px" }}
-          onClick={handleDialogOpen}
-        >
-          Add Product
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ marginLeft: "50px" }}
+            onClick={handleDialogOpen}
+          >
+            Add Product
+          </Button>
         </Tooltip>
       </Box>
-      <Box display="flex" justifyContent="flex-start" mb={2}>
-      </Box>
+      <Box display="flex" justifyContent="flex-start" mb={2}></Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow style={{ backgroundColor: "#f0f0f0" }}>
               {["image", "name", "price", "quantity", "category"].map((key) => (
                 <TableCell key={key} align="center">
-                  <Tooltip title={key.charAt(0).toUpperCase()+key.slice(1)}>
-                  {key === "price" ? (
-                    <TableSortLabel
-                      active={sortConfig.key === key}
-                      direction={
-                        sortConfig.key === key ? sortConfig.direction : "asc"
-                      }
-                      onClick={() => handleSort(key)}
-                    >
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </TableSortLabel>
-                    ) : key ==="category"? (
-                      
-                      <>
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                      <IconButton
-                      size="small"
-                      onClick={handleFilterClick}
-                      style={{marginLeft: "8px"}}
+                  <Tooltip title={key.charAt(0).toUpperCase() + key.slice(1)}>
+                    {key === "price" ? (
+                      <TableSortLabel
+                        active={sortConfig.key === key}
+                        direction={
+                          sortConfig.key === key ? sortConfig.direction : "asc"
+                        }
+                        onClick={() => handleSort(key)}
                       >
-                        <FilterListIcon/>
-                      </IconButton>
-                      <Menu
-                        anchorE1={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleFilterClose}
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </TableSortLabel>
+                    ) : key === "category" ? (
+                      <>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                        <IconButton
+                          size="small"
+                          onClick={handleFilterClick}
+                          style={{ marginLeft: "8px" }}
+                        >
+                          <FilterListIcon />
+                        </IconButton>
+                        <Menu
+                          anchorE1={anchorEl}
+                          open={Boolean(anchorEl)}
+                          onClose={handleFilterClose}
                         >
                           <MenuItem onClick={() => handleCategeorySelect("")}>
-                          All Categories
+                            All Categories
                           </MenuItem>
                           {categories.map((category) => (
                             <MenuItem
-                            key={category}
-                            onClick={() => handleCategeorySelect(category)}
+                              key={category._id}
+                              onClick={() =>
+                                handleCategeorySelect(category._id)
+                              }
                             >
-                              {category}
+                              {category.name}
                             </MenuItem>
                           ))}
-                          </Menu>
-                          </>
+                        </Menu>
+                      </>
                     ) : (
                       key.charAt(0).toUpperCase() + key.slice(1)
                     )}
-                    </Tooltip>
-                </TableCell> 
-              ))}
-              <TableCell align="center">
-                <Tooltip title= "Actions">
-                  <span>Action</span>
                   </Tooltip>
                 </TableCell>
+              ))}
+              <TableCell align="center">
+                <Tooltip title="Actions">
+                  <span>Action</span>
+                </Tooltip>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -393,24 +409,25 @@ const Products = () => {
                   <TableCell align="center">{product.name}</TableCell>
                   <TableCell align="center">{product.price}</TableCell>
                   <TableCell align="center">{product.quantity}</TableCell>
-                  <TableCell align="center">{product.category}</TableCell>
-                  
                   <TableCell align="center">
-                  <Tooltip title="Edit Product" arrow>
-                    <IconButton
-                      color="primary"
-                      onClick={() => handleEditProduct(product._id)}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                   </Tooltip>
-                   <Tooltip title="Delete product" arrow>
-                    <IconButton
-                      color="secondary"
-                      onClick={() => handleDeleteProduct(product._id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    {product.category?.name || "unknown"}
+                  </TableCell>{" "}
+                  <TableCell align="center">
+                    <Tooltip title="Edit Product" arrow>
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleEditProduct(product._id)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete product" arrow>
+                      <IconButton
+                        color="secondary"
+                        onClick={() => handleDeleteProduct(product._id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
                     </Tooltip>
                   </TableCell>
                 </TableRow>
@@ -473,12 +490,19 @@ const Products = () => {
                 labelId="category-label"
                 name="category"
                 value={newProduct.category || ""}
-                onChange={handleInputChange}
+                onChange={(e) => 
+                  setNewProduct((prev) => ({...prev, category: e.target.value}))
+                }
               >
-                <MenuItem value="fruits">Fruits</MenuItem>
-                <MenuItem value="veggies">Veggies</MenuItem>
-                <MenuItem value="flour">Flour</MenuItem>
-                <MenuItem value="snacks">Snacks</MenuItem>
+                {categories.length > 0 ? (
+                  categories.map((category) => (
+                    <MenuItem key={category._id} value={category.name}>
+                      {category.name}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem disabled>No Categories Available</MenuItem>
+                )}
               </Select>
             </FormControl>
             <Button
