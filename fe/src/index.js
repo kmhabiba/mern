@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { CategoryProvider } from './components/dashboard/context/CategoryContext'
 
 
  const theme = createTheme({  
@@ -17,12 +18,14 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
       }, 
     });
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <ThemeProvider theme={theme}>
-    <App />
-  </ThemeProvider>
-);
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(
+      <ThemeProvider theme={theme}>
+        <CategoryProvider>
+        <App />
+        </CategoryProvider>
+      </ThemeProvider>
+    );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
