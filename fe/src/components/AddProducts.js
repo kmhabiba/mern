@@ -1,5 +1,5 @@
 import { mountuseEffect,useContext, useEffect, useState } from "react";
-import { CategoryContext } from "../components/context/CategoryContext";
+import { CategoryContext } from "./context/CategoryContext";
 import {
   Container,
   Box,
