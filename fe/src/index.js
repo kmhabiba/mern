@@ -4,7 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CategoryProvider } from './components/context/CategoryContext'
+import { CategoryProvider } from './components/context/CategoryContext';
+import { WishlistCartProvider } from './components/context/WishlistCartContext';
 
 
  const theme = createTheme({  
@@ -22,7 +23,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ThemeProvider theme={theme}>
     <CategoryProvider>
+      <WishlistCartProvider>
     <App />
+      </WishlistCartProvider>
     </CategoryProvider>
   </ThemeProvider>
 );

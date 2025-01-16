@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Container, Box, Typography, Grid } from '@mui/material';
 import Navbar from './components/Navbar';
@@ -16,10 +16,26 @@ import ProtectedRoute from './components/ProtectedRoute';
 import UserHome from './components/UserHome';
 import { Navigate } from 'react-router-dom';
 import CategoryPage from './components/CategoryPage';
+import CategoryProducts from "./components/CategoryProducts";
+import WishlistPage from "./components/WishlistPage";
+import CartPage from "./components/CartPage";
+import { WishlistCartProvider } from './components/context/WishlistCartContext';
+ 
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('token');
+    if (storedUser) {
+        setUser(JSON.parse(storedUser)); // Convert back to object
+    }
+    if (storedToken) {
+        setToken(storedToken);
+    }
+  }, []);
 
   const logout = () => {
     setUser(null);
@@ -30,6 +46,7 @@ const App = () => {
   return (
     <Router>
       <CartProvider>
+        <WishlistCartProvider>
         <div style={{ display: 'flex' }}>
           {user && <Sidebar />}
           <div style={{ flexGrow: 1, paddingLeft: '10px', marginTop: '64px' }}>
@@ -46,10 +63,14 @@ const App = () => {
               {/* <Route path="/products" element={user ? <Products /> : <Login setUser={setUser} setToken={setToken} />} /> */}
               <Route path="/products/add" element={user ? <AddProducts /> : <Login setUser={setUser} setToken={setToken} />} />
               <Route path="/categories" element={<CategoryPage />} />
+              <Route path="/categories/:categoryId" element={<CategoryProducts />}/>
+              <Route path="/wishlist" element={<WishlistPage />} />           
+              <Route path="/cart" element={<CartPage />} />
             </Routes>
           </Container>
         </div>
       </div>
+      </WishlistCartProvider>
     </CartProvider>
     </Router >
   );

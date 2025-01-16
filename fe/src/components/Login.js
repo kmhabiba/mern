@@ -1,4 +1,4 @@
-//login with MUL layou
+//login with MUL layout
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -13,29 +13,48 @@ function Login({ setToken, setUser }) {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    // handleSumit with role
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:5001/api/auth/login', { email, password });
             const { token, role, username } = response.data;
-     
+            const user = { username, role }; // Store full user object  
             localStorage.setItem('token', token);
-            localStorage.setItem('role', role);
-            localStorage.setItem('username', username);
-     
+            localStorage.setItem('user', JSON.stringify(user)); // Store user as JSON
             setToken(token);
-            setUser(username);
-     
-            if (role === 'admin') {
-                navigate('/dashboard'); 
-            } else if (role === 'user') {
-                navigate('/user-home') 
-            }
+            setUser(user); // Storing full object instead of just username
+            navigate(role === 'admin' ? '/dashboard' : '/user-home');
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
         }
     };
+
+
+
+    // // handleSumit with role
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const response = await axios.post('http://localhost:5001/api/auth/login', { email, password });
+    //         const { token, role, username } = response.data;
+     
+    //         localStorage.setItem('token', token);
+    //         localStorage.setItem('role', role);
+    //         localStorage.setItem('username', username);
+     
+    //         setToken(token);
+    //         setUser(username);
+     
+    //         if (role === 'admin') {
+    //             navigate('/dashboard'); 
+    //         } else if (role === 'user') {
+    //             navigate('/user-home') 
+    //         }
+    //     } catch (err) {
+    //         setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    //     }
+    // };
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
