@@ -1,9 +1,11 @@
-
-const express = require('express');
-const { getCart, addToCart } = require('../controllers/cartController'); 
-const { protect } = require('../middlewares/authMiddleware'); 
+const express = require("express");
 const router = express.Router();
+const { getCart, addToCart, removeFromCart } = require("../controllers/cartController");
+const { protect } = require("../middlewares/authMiddleware");
  
-router.get('/cart', protect, getCart);
-router.post('/cart', protect, addToCart);
+// Define routes with authentication middleware
+router.get("/", getCart);
+router.post("/add", addToCart);
+router.post("/remove", removeFromCart);
+ 
 module.exports = router;

@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CategoryProvider } from './components/context/CategoryContext';
 import { WishlistCartProvider } from './components/context/WishlistCartContext';
+import { CartProvider } from './components/context/CartContext';
 
 
  const theme = createTheme({  
@@ -24,7 +25,9 @@ root.render(
   <ThemeProvider theme={theme}>
     <CategoryProvider>
       <WishlistCartProvider>
+        <CartProvider>
     <App />
+    </CartProvider>
       </WishlistCartProvider>
     </CategoryProvider>
   </ThemeProvider>

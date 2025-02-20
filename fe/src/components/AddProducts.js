@@ -400,10 +400,14 @@ const Products = () => {
               displayedProducts.map((product) => (
                 <TableRow key={product._id}>
                   <TableCell align="center">
+                  {console.log("Image URL:", product.image ? `http://localhost:5001/uploads/${product.image}` : "/fallback-image.jpg")}
+ 
                     <img
-                      src={product.image || "placeholder-image-url.jfif"}
+                      //src={product.image || "placeholder-image-url.jfif"}
+                      // src={`http://localhost:5001/uploads/${product.img}`}
+                      src={product?.image ? `http://localhost:5001${product.image}` : "/fallback-image.jpg"} 
                       alt={product.name}
-                      style={{ width: "50px", height: "50px" }}
+                      style={{ width: "50px", height: "50px" , objectFit: "cover" }}
                     />
                   </TableCell>
                   <TableCell align="center">{product.name}</TableCell>

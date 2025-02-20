@@ -7,16 +7,24 @@ exports.protect = async (req, res, next) => {  let token;
             req.headers.authorization.startsWith('Bearer')
         ) {
             token = req.headers.authorization.split(' ')[1];
+            console.log("token received:",token);
+
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            console.log(" decoded token :",decoded);
+
             const user = await User.findById(decoded.id).select('-password');
  
             if (!user) {
+                console.log("use not found for the ID:",decoded.id);
+
                 return res.status(401).json({ message: 'User not found' });
             }
  
+            console.log("authenticated user:",user);
             req.user = user;
             next(); 
         } else {
+            console.log("authorization header missing ");
             return res.status(401).json({ message: 'Not authorized, no token' });
         }
     } catch (error) {
