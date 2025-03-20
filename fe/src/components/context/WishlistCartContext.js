@@ -45,8 +45,16 @@ const addToCart = (item) => {
     });
   };
  
+  // const removeFromCart = (itemId) => {
+  //   setCart(cart.filter((item) => item._id !== itemId));
+  // };
+
   const removeFromCart = (itemId) => {
-    setCart(cart.filter((item) => item._id !== itemId));
+    setCart((prevCart) => {
+      const updatedCart = prevCart.filter((item) => item._id !== itemId);
+      console.log("Updated cart after removal:", updatedCart); // Debugging log
+      return updatedCart;
+    });
   };
  
   const moveToWishlist = (item) => {

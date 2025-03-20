@@ -6,12 +6,15 @@ import {
   Grid,
   Card,
   CardContent,
+  CardMedia,
   IconButton,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+// import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const WishlistPage = () => {
-  const { wishlist, toggleWishlist } = useContext(WishlistCartContext);
+  const { wishlist, toggleWishlist , addToCart} = useContext(WishlistCartContext);
 
   return (
     <Container>
@@ -24,6 +27,12 @@ const WishlistPage = () => {
           wishlist.map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product._id}>
               <Card>
+                 <CardMedia
+                                  component="img"
+                                  height="200"
+                                  image={`http://localhost:5001${product.image}`}
+                                  alt={product.name}
+                                />
                 <CardContent>
                   <Typography variant="h6">{product.name}</Typography>
                   <Typography variant="body2">
@@ -34,6 +43,13 @@ const WishlistPage = () => {
                 <IconButton onClick={() => toggleWishlist(product)}>
                   <FavoriteIcon color="error" />
                 </IconButton>
+
+                <IconButton onClick={() => addToCart(product)}>
+                  <ShoppingCartIcon color="primary" />
+                
+                    
+                </IconButton>
+
               </Card>
             </Grid>
           ))

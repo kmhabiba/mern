@@ -18,8 +18,8 @@ function Login({ setToken, setUser }) {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:5001/api/auth/login', { email, password });
-            const { token, role, username } = response.data;
-            const user = { username, role }; // Store full user object  
+            const { token, role, username , _id} = response.data;
+            const user = { username, role ,_id}; // Store full user object  
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(user)); // Store user as JSON
             setToken(token);

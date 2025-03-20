@@ -6,6 +6,7 @@ import {
   Container,
   Typography,
   Grid,
+  CardMedia,
   Card,
   CardContent,
   CardActions,
@@ -55,14 +56,21 @@ const CategoryProducts = () => {
           products.map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product._id}>
               <Card>
+                
+                  <CardMedia 
+                  component="img" 
+                  height="200" 
+                  image={`http://localhost:5001${product.image}`}
+                  alt={product.name}
+                  onError={(e) => {e.target.src="/fallback-image.jpg"}}
+                  />
                 <CardContent>
                   <Typography variant="h6">{product.name}</Typography>
-                  <Typography variant="body2">
-                    Price: ${product.price}
-                  </Typography>
+                  <Typography variant="body2">Price: INR {product.price}</Typography>
                 </CardContent>
 
                 <CardActions>
+                  
                   <IconButton onClick={() => toggleWishlist(product)}>
                     {wishlist.some((item) => item._id === product._id) ? (
                       <FavoriteIcon color="error" />

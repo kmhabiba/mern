@@ -173,7 +173,7 @@ const Sidebar = () => {
               <ListItemIcon>
                 <CategoryIcon sx={{ color: "black" }} />
               </ListItemIcon>
-              <ListItemText primary="Products" />
+              <ListItemText primary="Categories" />
               {openProducts ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
 
@@ -202,12 +202,12 @@ const Sidebar = () => {
         )}
 
         {user.role === "admin" || user.role === "user" ? (
-          <ListItem button onClick={toggleOrders}>
+          <ListItem button onClick={() => navigate("/orders")}>
             <ListItemIcon>
               <ShoppingCartIcon sx={{ color: "black" }} />
             </ListItemIcon>
             <ListItemText primary="Orders" />
-            {openOrders ? <ExpandLess /> : <ExpandMore />}
+            
           </ListItem>
         ) : null}
 
@@ -229,7 +229,7 @@ const Sidebar = () => {
           </>
         )}
 
-        <ListItem button>
+        <ListItem button onClick={() => navigate("/myaccount")}> 
           <ListItemIcon>
             <AccountCircleIcon sx={{ color: "black" }} />
           </ListItemIcon>

@@ -20,6 +20,9 @@ import CategoryProducts from "./components/CategoryProducts";
 import WishlistPage from "./components/WishlistPage";
 import CartPage from "./components/CartPage";
 import { WishlistCartProvider } from './components/context/WishlistCartContext';
+import { ProductProvider } from './components/context/ProductContext';
+import MyAccount from './components/MyAccount';
+import OrderHistory from "./components/OrderHistory";
  
 
 const App = () => {
@@ -47,6 +50,7 @@ const App = () => {
     <Router>
       <CartProvider>
         <WishlistCartProvider>
+          <ProductProvider>
         <div style={{ display: 'flex' }}>
           {user && <Sidebar />}
           <div style={{ flexGrow: 1, paddingLeft: '10px', marginTop: '64px' }}>
@@ -66,10 +70,13 @@ const App = () => {
               <Route path="/categories/:categoryId" element={<CategoryProducts />}/>
               <Route path="/wishlist" element={<WishlistPage />} />           
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/orders" element={<OrderHistory />} />
+              <Route path="/myaccount" element={<MyAccount />}/>
             </Routes>
           </Container>
         </div>
       </div>
+      </ProductProvider>
       </WishlistCartProvider>
     </CartProvider>
     </Router >

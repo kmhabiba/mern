@@ -8,6 +8,7 @@ const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv');
 const categoryRoutes = require('./routes/categoryRoutes');
+const addressRoutes = require("./routes/addressRoutes");
  
 dotenv.config();
 const app = express();
@@ -27,12 +28,14 @@ app.get("/uploads/:filename", (req, res) => {
   res.setHeader("Content-Type", "image/png"); // Set appropriate MIME type
   res.sendFile(filePath);
 });
+
 app.use('/api/categories', categoryRoutes);
- 
+app.use('/api/addresses' , addressRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/products',  productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/wishlist',wishlistRoutes);
+
 
  
 const PORT = process.env.PORT || 5001;

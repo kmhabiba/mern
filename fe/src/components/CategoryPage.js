@@ -200,10 +200,13 @@ const Categories = () => {
                     </TableHead>
                     <TableBody>
                         {displayedCategories.map((category) => (
+                            
                             <TableRow key={category._id}>
                                 <TableCell align="center">
                                     <img
-                                        src={category.image || '/default-image.png'}
+                                        // src={category.image || '/default-image.png'}
+                                        src={category?.image ? `http://localhost:5001/uploads${category.image}` : "/fallback-image.jpg"} 
+    
                                         alt={category.name}
                                         style={{ width: 50, height: 50 }}
                                     />

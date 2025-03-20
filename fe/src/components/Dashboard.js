@@ -14,17 +14,17 @@ const Dashboard = () => {
   const cards = [
     {
       title: "Manage Products",
-      image: "https://source.unsplash.com/300x200/?groceries,shopping",
+      image: "https://th.bing.com/th?id=OIP.VRY3I1zfb-Onm1cXywMSdQHaHo&w=246&h=253&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
       route: "/products/add",
     },
     {
       title: "Manage Categories",
-      image: "https://source.unsplash.com/300x200/?categories,shopping",
+      image: "https://th.bing.com/th?id=OIP.PaFqd-3Et4nG-auxrzSPIgHaFj&w=288&h=216&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2",
       route: "/categories",
     },
     {
       title: "Manage Orders",
-      image: "https://source.unsplash.com/300x200/?orders,ecommerce",
+      image: "https://th.bing.com/th?id=OIP.7RiUztoXkUv_x4mk4-Z4ggHaE8&w=306&h=204&c=8&rs=1&qlt=30&o=6&dpr=1.5&pid=3.1&rm=2",
       route: "/orders/manage",
     },
   ];
