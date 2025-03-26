@@ -12,12 +12,13 @@ export const CartProvider = ({ children }) => {
   // Fetch cart items
   const fetchCart = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/cart", {
+      const response = await axios.get("http://localhost:5001/api/cart", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setCart(response.data.items || []);
+      localStorage.setItem("cart", JSON.stringify(response.data.items || []));
     } catch (error) {
       console.error("Error fetching cart:", error);
     }
@@ -36,6 +37,7 @@ export const CartProvider = ({ children }) => {
         }
       );
       setCart(response.data.items || []);
+      localStorage.setItem("cart", JSON.stringify(response.data.items || []));
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
@@ -45,7 +47,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (productId) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/cart/remove",
+        "http://localhost:5001/api/cart/remove",
         { productId },
         {
           headers: {
@@ -54,6 +56,7 @@ export const CartProvider = ({ children }) => {
         }
       );
       setCart(response.data.items || []);
+      localStorage.setItem("cart", JSON.stringify(response.data.items || []));
     } catch (error) {
       console.error("Error removing from cart:", error);
     }
@@ -63,7 +66,7 @@ export const CartProvider = ({ children }) => {
   const updateQuantity = async (productId, quantity) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/cart/update",
+        "http://localhost:5001/api/cart/update",
         { productId, quantity },
         {
           headers: {
@@ -72,6 +75,7 @@ export const CartProvider = ({ children }) => {
         }
       );
       setCart(response.data.items || []);
+      localStorage.setItem("cart", JSON.stringify(response.data.items || []));
     } catch (error) {
       console.error("Error updating quantity:", error);
     }
@@ -82,7 +86,7 @@ export const CartProvider = ({ children }) => {
     try {
       // Placeholder API call (replace with your actual endpoint)
       await axios.post(
-        "http://localhost:5000/api/wishlist/add",
+        "http://localhost:5001/api/wishlist/add",
         { productId },
         {
           headers: {
@@ -97,8 +101,17 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // useEffect(() => {
+  //   fetchCart();
+  // }, []);
+
   useEffect(() => {
-    fetchCart();
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    if (storedCart.length > 0) {
+      setCart(storedCart);
+    } else {
+      fetchCart(); // Fetch from API only if localStorage is empty
+    }
   }, []);
 
   return (
@@ -115,28 +128,3 @@ export const CartProvider = ({ children }) => {
     </CartContext.Provider>
   );
 };
-
-//..................without cart api............................................................................
-// import React, { createContext, useContext, useState } from 'react';
-
-// const CartContext = createContext();
-
-// export const useCart = () => useContext(CartContext);
-
-// export const CartProvider = ({ children }) => {
-//   const [cart, setCart] = useState([]);
-
-//   const addToCart = (product) => {
-//     setCart((prevCart) => [...prevCart, product]);
-//   };
-
-//   const removeFromCart = (id) => {
-//     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
-//   };
-
-//   return (
-// <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
-//       {children}
-// </CartContext.Provider>
-//   );
-// };

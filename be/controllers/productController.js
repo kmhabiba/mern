@@ -73,6 +73,44 @@ const getProducts = async (req, res) => {
     res.status(500).json({ message: "Error fetching products" });
   }
 };
+ 
+const getProductById = async (req, res) => {
+
+  const { id } = req.params;
+
+  console.log("Received ID:",id);  // ✅ Log the ID
+ 
+  // Validate MongoDB ObjectId
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+
+    return res.status(400).json({ message: "Invalid product ID format" });
+
+  }
+ 
+  try {
+
+    const product = await Product.findById(id).populate("category", "name");
+
+    if (!product) {
+
+      console.log("Product not found in DB");
+
+      return res.status(404).json({ message: "Product not found" });
+
+    }
+
+    res.status(200).json(product);
+
+  } catch (error) {
+
+    console.error("Error fetching product by ID:", error);
+
+    res.status(500).json({ message: "Error fetching product" });
+
+  }
+
+};
 
 const updateProduct = async (req, res) => {
   try {
@@ -135,4 +173,4 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, getProducts, updateProduct, deleteProduct };
+module.exports = { addProduct, getProducts, updateProduct, deleteProduct , getProductById };

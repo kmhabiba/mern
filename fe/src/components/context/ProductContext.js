@@ -4,6 +4,8 @@ export const ProductContext = createContext();
 
 export const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  //Global search state
+  const [searchTerm , setSearchTerm] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -26,7 +28,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   return (
-    <ProductContext.Provider value={{ products, fetchProducts }}>
+    <ProductContext.Provider value={{ products, fetchProducts , searchTerm , setSearchTerm}}>
       {children}
     </ProductContext.Provider>
   );

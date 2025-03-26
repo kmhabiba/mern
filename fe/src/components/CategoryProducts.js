@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams , Link } from "react-router-dom";
 import axios from "axios";
 import { WishlistCartContext } from "../components/context/WishlistCartContext";
+import { ProductContext } from "../components/context/ProductContext";
 import {
   Container,
   Typography,
@@ -19,13 +20,18 @@ import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 
 const CategoryProducts = () => {
   const { categoryId } = useParams();
-  const { wishlist, cart, addToCart, toggleWishlist } =
-    useContext(WishlistCartContext);
+  const { wishlist, cart, addToCart, toggleWishlist } = useContext(WishlistCartContext);
+  const { searchTerm} = useContext(ProductContext);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     fetchProducts(categoryId);
   }, [categoryId]);
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+ 
 
   const fetchProducts = async (categoryId) => {
     const token = localStorage.getItem("token");
@@ -52,11 +58,12 @@ const CategoryProducts = () => {
       </Typography>
 
       <Grid container spacing={3}>
-        {products.length > 0 ? (
-          products.map((product) => (
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
             <Grid item xs={12} sm={6} md={4} key={product._id}>
               <Card>
-                
+                {product._id && (
+                <Link to = {`/product/${product._id}`} style={{ textDecoration: "none" , color:"inherit"}}>
                   <CardMedia 
                   component="img" 
                   height="200" 
@@ -68,6 +75,8 @@ const CategoryProducts = () => {
                   <Typography variant="h6">{product.name}</Typography>
                   <Typography variant="body2">Price: INR {product.price}</Typography>
                 </CardContent>
+                </Link>
+                )}
 
                 <CardActions>
                   
