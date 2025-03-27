@@ -1,4 +1,4 @@
-import { mountuseEffect,useContext, useEffect, useState } from "react";
+import { mountuseEffect, useContext, useEffect, useState } from "react";
 import { CategoryContext } from "./context/CategoryContext";
 import {
   Container,
@@ -41,6 +41,7 @@ const Products = () => {
     price: "",
     image: null,
     quantity: "",
+    quantityType: "",
     category: "",
   });
   const [isEditing, setIsEditing] = useState(false);
@@ -95,12 +96,12 @@ const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, []); // Fetch products on mount
-   
+
   useEffect(() => {
     if (products.length > 0) {
       if (selectedCategory) {
         const filtered = products.filter(
-          (product) => product.category?._id === selectedCategory 
+          (product) => product.category?._id === selectedCategory
         );
         setFilteredProducts(filtered);
       } else {
@@ -158,6 +159,7 @@ const Products = () => {
       !newProduct.name ||
       !newProduct.price ||
       !newProduct.quantity ||
+      !newProduct.quantityType ||
       !newProduct.image ||
       !newProduct.category
     ) {
@@ -170,6 +172,7 @@ const Products = () => {
     formData.append("name", newProduct.name);
     formData.append("price", newProduct.price);
     formData.append("quantity", newProduct.quantity);
+    formData.append("quantityType", newProduct.quantityType);
     formData.append("category", newProduct.category);
     formData.append("image", newProduct.image);
 
@@ -203,6 +206,8 @@ const Products = () => {
     }
   };
 
+  const quantityTypes = ["g", "kg", "ml", "L", "pcs", "dozen"]; // Define allowed units
+
   const handleEditProduct = (id) => {
     const product = products.find((p) => p._id === id);
     setIsEditing(true);
@@ -212,6 +217,7 @@ const Products = () => {
       price: product.price,
       image: product.image,
       quantity: product.quantity,
+      quantityType: product.quantityType,
       category: product.category,
     });
     handleDialogOpen();
@@ -224,6 +230,7 @@ const Products = () => {
     formData.append("name", newProduct.name);
     formData.append("price", newProduct.price);
     formData.append("quantity", newProduct.quantity);
+    formData.append("quantityType", newProduct.quantityType);
     formData.append("category", newProduct.category);
 
     if (newProduct.image instanceof File) {
@@ -302,6 +309,7 @@ const Products = () => {
     page * rowsPerPage + rowsPerPage
   );
 
+  console.log("products in table",displayedProducts);
   return (
     <Container sx={{ marginTop: "30px" }}>
       <Typography variant="h5" color="primary" gutterBottom>
@@ -335,11 +343,139 @@ const Products = () => {
         </Tooltip>
       </Box>
       <Box display="flex" justifyContent="flex-start" mb={2}></Box>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow style={{ backgroundColor: "#f0f0f0" }}>
-              {["image", "name", "price", "quantity", "category"].map((key) => (
+              {[
+                "image",
+                "name",
+                "price",
+                "quantity",
+                "QntyType",
+                "category",
+              ].map((key) => (
+                <TableCell key={key} align="center">
+                  <Tooltip title={key.charAt(0).toUpperCase() + key.slice(1)}>
+                    {key === "price" ? (
+                      <TableSortLabel
+                        active={sortConfig.key === key}
+                        direction={
+                          sortConfig.key === key ? sortConfig.direction : "asc"
+                        }
+                        onClick={() => handleSort(key)}
+                      >
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </TableSortLabel>
+                    ) : key === "category" ? (
+                      <>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                        <IconButton
+                          size="small"
+                          onClick={handleFilterClick}
+                          style={{ marginLeft: "8px" }}
+                        >
+                          <FilterListIcon />
+                        </IconButton>
+                        <Menu
+                          anchorEl={anchorEl}
+                          open={Boolean(anchorEl)}
+                          onClose={handleFilterClose}
+                        >
+                          <MenuItem onClick={() => handleCategeorySelect("")}>
+                            All Categories
+                          </MenuItem>
+
+                          {categories.map((category) => (
+                            <MenuItem
+                              key={category._id}
+                              onClick={() =>
+                                handleCategeorySelect(category._id)
+                              }
+                            >
+                              {category.name}
+                            </MenuItem>
+                          ))}
+                        </Menu>
+                      </>
+                    ) : (
+                      key.charAt(0).toUpperCase() + key.slice(1)
+                    )}
+                  </Tooltip>
+                </TableCell>
+              ))}
+              <TableCell align="center">
+                <Tooltip title="Actions">
+                  <span>Action</span>
+                </Tooltip>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {displayedProducts.length > 0 ? (
+              displayedProducts.map((product) => (
+                <TableRow key={product._id}>
+                  <TableCell align="center">
+                    <img
+                      src={
+                        product?.image
+                          ? `http://localhost:5001${product.image}`
+                          : "/fallback-image.jpg"
+                      }
+                      alt={product.name}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="center">{product.name}</TableCell>
+                  <TableCell align="center">{product.price}</TableCell>
+                  <TableCell align="center">{product.quantity}</TableCell>
+                  <TableCell align="center">{product.quantityType ? product.quantityType : "-"}</TableCell>{" "}
+                  {/* Added QntyType */}
+                  <TableCell align="center">
+                    {product.category?.name || "unknown"}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Tooltip title="Edit Product" arrow>
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleEditProduct(product._id)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete product" arrow>
+                      <IconButton
+                        color="secondary"
+                        onClick={() => handleDeleteProduct(product._id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  {" "}
+                  {/* Updated colSpan to match new column count */}
+                  No products found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+        {/* <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow style={{ backgroundColor: "#f0f0f0" }}>
+              {["image", "name", "price", "quantity", "QntyType" ,"category"].map((key) => (
                 <TableCell key={key} align="center">
                   <Tooltip title={key.charAt(0).toUpperCase() + key.slice(1)}>
                     {key === "price" ? (
@@ -400,14 +536,27 @@ const Products = () => {
               displayedProducts.map((product) => (
                 <TableRow key={product._id}>
                   <TableCell align="center">
-                  {console.log("Image URL:", product.image ? `http://localhost:5001/uploads/${product.image}` : "/fallback-image.jpg")}
- 
+                    {console.log(
+                      "Image URL:",
+                      product.image
+                        ? `http://localhost:5001/uploads/${product.image}`
+                        : "/fallback-image.jpg"
+                    )}
+
                     <img
                       //src={product.image || "placeholder-image-url.jfif"}
                       // src={`http://localhost:5001/uploads/${product.img}`}
-                      src={product?.image ? `http://localhost:5001${product.image}` : "/fallback-image.jpg"} 
+                      src={
+                        product?.image
+                          ? `http://localhost:5001${product.image}`
+                          : "/fallback-image.jpg"
+                      }
                       alt={product.name}
-                      style={{ width: "50px", height: "50px" , objectFit: "cover" }}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                      }}
                     />
                   </TableCell>
                   <TableCell align="center">{product.name}</TableCell>
@@ -444,7 +593,7 @@ const Products = () => {
               </TableRow>
             )}
           </TableBody>
-        </Table>
+        </Table> */}
         <TablePagination
           rowsPerPageOptions={[30, 40, 50]}
           component="div"
@@ -489,13 +638,37 @@ const Products = () => {
               margin="normal"
             />
             <FormControl fullWidth margin="normal">
+              <InputLabel>Quantity Type</InputLabel>
+              <Select
+                name="quantityType"
+                value={newProduct.quantityType}
+                // onChange={handleInputChange}
+                onChange={(e) =>
+                  setNewProduct((prev) => ({
+                    ...prev,
+                    quantityType: e.target.value, // ✅ Ensure it updates state
+                  }))
+                }
+              >
+                {quantityTypes.map((type) => (
+                  <MenuItem key={type} value={type}>
+                    {type}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth margin="normal">
               <InputLabel id="category-label">Category</InputLabel>
               <Select
                 labelId="category-label"
                 name="category"
                 value={newProduct.category || ""}
-                onChange={(e) => 
-                  setNewProduct((prev) => ({...prev, category: e.target.value}))
+                onChange={(e) =>
+                  setNewProduct((prev) => ({
+                    ...prev,
+                    category: e.target.value,
+                  }))
                 }
               >
                 {categories.length > 0 ? (

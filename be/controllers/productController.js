@@ -3,12 +3,12 @@ const Product = require("../Models/Product");
 const mongoose = require('mongoose');
 
 const addProduct = async (req, res) => {
-  const { name, price, quantity, category } = req.body;
+  const { name, price, quantity, quantityType , category } = req.body;
   const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
   console.log("Request payload:", req.body);
 
-  if (!name || !price || !imagePath || !quantity || !category) {
+  if (!name || !price || !imagePath || !quantity || !quantityType || !category) {
     return res
       .status(400)
       .json({
@@ -29,6 +29,7 @@ const addProduct = async (req, res) => {
       name,
       price,
       quantity,
+      quantityType,
       category: categoryDoc._id,
       image: imagePath,
     });

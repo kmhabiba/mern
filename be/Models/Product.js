@@ -17,6 +17,11 @@ const productSchema = new mongoose.Schema({
     type:Number,
     required:true,
   },
+  quantityType:{
+    type:String,
+    // enum:['g','kg','ml' , 'L','pcs' , 'dozen'],
+    required: true,
+  },
   category:{
     type:mongoose.Schema.Types.ObjectId, 
     //type:String,

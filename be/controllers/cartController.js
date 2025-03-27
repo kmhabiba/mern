@@ -128,6 +128,7 @@ exports.removeFromCart = async (req, res) => {
     // Find the user's cart
 
     let cart = await Cart.findOne({ userId });
+     console.log("Cart before removal:" , cart);
 
     if (cart) {
       // Filter out the product to remove
@@ -186,12 +187,12 @@ const calculateCartTotal = (cart) => {
   const finalTotal = totalPrice + platformFee + shippingFee;
 
   return {
-    totalPrice, // Total MRP
+    totalPrice,
 
     platformFee,
 
     shippingFee,
 
-    finalTotal, // Grand Total
+    finalTotal,
   };
 };
