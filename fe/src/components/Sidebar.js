@@ -9,7 +9,9 @@ import {
   Avatar,
   Typography,
   Collapse,
+  IconButton,
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   Dashboard as DashboardIcon,
   ExpandLess,
@@ -24,24 +26,26 @@ import { CategoryContext } from "./context/CategoryContext";
 const Sidebar = () => {
   const navigate = useNavigate();
   const { categories } = useContext(CategoryContext);
-
+ 
   const[user,setUser] = useState({username:"User",role:"user"});
-
-
-
+ 
+ 
+ 
   const [openProducts, setOpenProducts] = useState(false);
   const [openOrders, setOpenOrders] = useState(false);
-
+  const [openSidebar, setOpenSidebar] = useState(false);
+ 
   const toggleProducts = () => setOpenProducts(!openProducts);
+  // const toggleSidebar = () => setOpenSidebar(!openSidebar);
   const toggleOrders = () => setOpenOrders(!openOrders);
-
+ 
   const handleDashboardClick = () => {
     navigate("/dashboard");
   };
-
+ 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-
+ 
     if(storedUser) {
       try{
         const parsedUser = JSON.parse(storedUser);
@@ -51,22 +55,27 @@ const Sidebar = () => {
       }
     }
   },[])
-
+ 
   // const role = localStorage.getItem("role"); // 'admin' or 'user'
   // const username = localStorage.getItem("username");
-
+ 
   return (
+    <>
     <Drawer
       variant="permanent"
+      anchor="left"
+      open={true}
       sx={{
         width: 240,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: 240,
+          transition: "width 0.3s ease-in-out",
           boxSizing: "border-box",
           backgroundColor: "white",
           marginTop: "64px",
           color: "black",
+         
         },
       }}
     >
@@ -76,7 +85,7 @@ const Sidebar = () => {
         </Avatar>
         <Typography variant="h6">Hello, {user.username}</Typography>
       </div>
-
+ 
       <List>
         {user.role === "admin" && (
           <ListItem button onClick={handleDashboardClick}>
@@ -86,7 +95,7 @@ const Sidebar = () => {
             <ListItemText primary="Dashboard" />
           </ListItem>
         )}
-
+ 
         {user.role === "admin" && (
           <>
             <ListItem button onClick={toggleProducts}>
@@ -121,7 +130,7 @@ const Sidebar = () => {
             </Collapse>
           </>
         )}
-
+ 
         {user.role === "user" && (
           <ListItem button onClick={() => navigate("/user-home")}>
             <ListItemIcon>
@@ -130,7 +139,7 @@ const Sidebar = () => {
             <ListItemText primary="User Dashboard" />
           </ListItem>
         )}
-
+ 
         {/* {role === "user" && (
           <>
             <ListItem button onClick={toggleProducts}>
@@ -165,7 +174,7 @@ const Sidebar = () => {
             </Collapse>
           </>
         )} */}
-
+ 
         {user.role === "user" && (
           // Products Section
           <>
@@ -176,7 +185,7 @@ const Sidebar = () => {
               <ListItemText primary="Categories" />
               {openProducts ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
-
+ 
             <Collapse in={openProducts} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 {categories.length > 0 ? (
@@ -200,17 +209,17 @@ const Sidebar = () => {
             </Collapse>
           </>
         )}
-
+ 
         {user.role === "admin" || user.role === "user" ? (
           <ListItem button onClick={() => navigate("/orders")}>
             <ListItemIcon>
               <ShoppingCartIcon sx={{ color: "black" }} />
             </ListItemIcon>
             <ListItemText primary="Orders" />
-            
+           
           </ListItem>
         ) : null}
-
+ 
         {user.role === "admin" && (
           <>
             <ListItem button>
@@ -219,7 +228,7 @@ const Sidebar = () => {
               </ListItemIcon>
               <ListItemText primary="Supplier" />
             </ListItem>
-
+ 
             <ListItem button>
               <ListItemIcon>
                 <AccountCircleIcon sx={{ color: "black" }} />
@@ -228,14 +237,14 @@ const Sidebar = () => {
             </ListItem>
           </>
         )}
-
-        <ListItem button onClick={() => navigate("/myaccount")}> 
+ 
+        <ListItem button onClick={() => navigate("/myaccount")}>
           <ListItemIcon>
             <AccountCircleIcon sx={{ color: "black" }} />
           </ListItemIcon>
           <ListItemText primary="My Account" />
         </ListItem>
-
+ 
         <ListItem button>
           <ListItemIcon>
             <LogoutIcon sx={{ color: "black" }} />
@@ -244,7 +253,8 @@ const Sidebar = () => {
         </ListItem>
       </List>
     </Drawer>
+    </>
   );
 };
-
+ 
 export default Sidebar;
