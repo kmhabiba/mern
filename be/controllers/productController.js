@@ -116,10 +116,10 @@ const getProductById = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, quantity, category } = req.body;
+    const { name, price, quantity, category , quantityType} = req.body;
  
     // Build updated data object
-    const updatedData = { name, price, quantity };
+    const updatedData = { name, price, quantity,quantityType };
  
     // Handle category validation
     if (category) {
